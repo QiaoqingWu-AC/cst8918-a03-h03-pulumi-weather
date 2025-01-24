@@ -40,5 +40,3 @@ const registryCredentials = containerregistry
       password: creds.passwords![0].value!,
     }
   })
-
-

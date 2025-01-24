@@ -42,6 +42,7 @@ const registryCredentials = containerregistry
       password: creds.passwords![0].value!,
     }
   })
+
   const image = new docker.Image(`${prefixName}-image`, {
     imageName: pulumi.interpolate`${registry.loginServer}/${imageName}:${imageTag}`,
     build: {
@@ -54,6 +55,7 @@ const registryCredentials = containerregistry
       password: registryCredentials.password,
     },
   })
+
   const containerGroup = new containerinstance.ContainerGroup(
     `${prefixName}-container-group`,
     {
@@ -107,3 +109,10 @@ const registryCredentials = containerregistry
       },
     },
   )
+
+// Export the service's IP address, hostname, and fully-qualified URL.
+export const hostname = containerGroup.ipAddress.apply((addr) => addr!.fqdn!)
+export const ip = containerGroup.ipAddress.apply((addr) => addr!.ip!)
+export const url = containerGroup.ipAddress.apply(
+  (addr) => `http://${addr!.fqdn!}:${containerPort}`,
+)

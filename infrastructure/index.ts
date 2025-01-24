@@ -1,3 +1,4 @@
+import * as containerinstance from '@pulumi/azure-native/containerinstance'
 import * as docker from '@pulumi/docker'
 import * as pulumi from "@pulumi/pulumi";
 import * as resources from '@pulumi/azure-native/resources';
@@ -53,3 +54,56 @@ const registryCredentials = containerregistry
       password: registryCredentials.password,
     },
   })
+  const containerGroup = new containerinstance.ContainerGroup(
+    `${prefixName}-container-group`,
+    {
+      resourceGroupName: resourceGroup.name,
+      osType: 'linux',
+      restartPolicy: 'always',
+      imageRegistryCredentials: [
+        {
+          server: registry.loginServer,
+          username: registryCredentials.username,
+          password: registryCredentials.password,
+        },
+      ],
+      containers: [
+        {
+          name: imageName,
+          image: image.imageName,
+          ports: [
+            {
+              port: containerPort,
+              protocol: 'tcp',
+            },
+          ],
+          environmentVariables: [
+            {
+              name: 'PORT',
+              value: containerPort.toString(),
+            },
+            {
+              name: 'WEATHER_API_KEY',
+              value: '8a8b44a428b8afd66bf312ca4c49c25c',
+            },
+          ],
+          resources: {
+            requests: {
+              cpu: cpu,
+              memoryInGB: memory,
+            },
+          },
+        },
+      ],
+      ipAddress: {
+        type: containerinstance.ContainerGroupIpAddressType.Public,
+        dnsNameLabel: `${imageName}`,
+        ports: [
+          {
+            port: publicPort,
+            protocol: 'tcp',
+          },
+        ],
+      },
+    },
+  )

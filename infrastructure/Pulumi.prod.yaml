@@ -1,0 +1,11 @@
+config:
+  azure-native:location: canadacentral
+  cst8918-a03-infra:appPath: ../
+  cst8918-a03-infra:containerPort: '80'
+  cst8918-a03-infra:publicPort: '80'
+  cst8918-a03-infra:cpu: '1'
+  cst8918-a03-infra:memory: '2'
+  cst8918-a03-infra:prefixName: 'cst8918a03wu000302'
+  cst8918-a03-infra:imageTag: 'v0.2.0'
+  cst8918-a03-infra:weatherApiKey:
+    secure: AAABAO6Q+GMGfPf0SA8Q4pcvHeA0wu4JbriHdFQFZYHKv1V/l9X5mKj+xmuF0p0V1kzWUluZOWQT+uQROWzObQ==
